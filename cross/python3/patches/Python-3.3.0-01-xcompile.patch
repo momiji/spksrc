@@ -1,0 +1,11 @@
+--- setup.py.or	2012-10-16 13:51:24.372339984 +0200
++++ setup.py	2012-10-16 13:52:41.595659837 +0200
+@@ -514,6 +514,8 @@
+         # lib_dirs and inc_dirs are used to search for files;
+         # if a file is found in one of those directories, it can
+         # be assumed that no additional -I,-L directives are needed.
++        lib_dirs = self.compiler.library_dirs
++        inc_dirs = self.compiler.include_dirs
+         if not cross_compiling:
+             lib_dirs = self.compiler.library_dirs + [
+                 '/lib64', '/usr/lib64',

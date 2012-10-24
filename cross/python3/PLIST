@@ -1,0 +1,7 @@
+lnk:bin/python
+lnk:bin/python3
+bin:bin/python3.3
+rsc:etc/mime.types
+rsc:lib/python3.3
+rsc:include/python3.3m/pyconfig.h
+lib:lib/python3.3/lib-dynload/*.so
