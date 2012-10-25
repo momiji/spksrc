@@ -37,7 +37,7 @@ include ../../mk/spksrc.tc-fix.mk
 all: fix
 
 
-TOOLS = ld cpp nm cc:gcc as ranlib cxx:g++ ar strip objdump
+TOOLS = ld cpp nm cc:gcc as ranlib cxx:g++ ar strip objdump readelf
 
 CFLAGS += $(TC_CFLAGS)
 CFLAGS += -I$(INSTALL_DIR)/$(INSTALL_PREFIX)/include
@@ -63,6 +63,8 @@ tc_vars: patch
 	@echo TC_ENV += CPPFLAGS=\"$(CPPFLAGS) $$\(ADDITIONAL_CPPFLAGS\)\"
 	@echo TC_ENV += LDFLAGS=\"$(LDFLAGS) $$\(ADDITIONAL_LDFLAGS\)\"
 	@echo TC_CONFIGURE_ARGS := --host=$(TC_TARGET) --build=i686-pc-linux
+	@echo TC_TARGET := $(TC_TARGET)
+	@echo TC_ARCH := $(shell expr "$(TC_TARGET)" : '\([^-]*\)' )
 
 
 ### Clean rules
