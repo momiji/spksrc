@@ -10,6 +10,8 @@ TC_PREFIX = powerpc-none-linux-gnuspe
 TC_TARGET = powerpc-none-linux-gnuspe
 
 TC_CFLAGS =
+TC_CPPFLAGS =
+TC_CXXFLAGS =
 TC_LDFLAGS =
 
 include ../../mk/spksrc.tc.mk

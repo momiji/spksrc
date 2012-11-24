@@ -1,9 +1,8 @@
 SPK_NAME = znc
-SPK_VERS = 1.0-beta1
-SPK_REV = 2
+SPK_VERS = 1.0
+SPK_REV = 3
 SPK_ICON = src/znc.png
 DSM_UI_DIR = app
-BETA = 1
 
 DEPENDS = cross/busybox cross/$(SPK_NAME)
 
@@ -14,7 +13,7 @@ DESCRIPTION_SPN = IRC bouncer avanzado. Un IRC bouncer no es más que un proxy p
 ADMIN_PORT = 8250
 RELOAD_UI = yes
 DISPLAY_NAME = ZNC
-CHANGELOG = "1. Update to 1.0\\\n2. Remove unsupported external modules"
+CHANGELOG = "1. Improve user management"
 
 HOMEPAGE = http://wiki.znc.in/
 LICENSE  =
@@ -28,6 +27,9 @@ ADDITIONAL_SCRIPTS =
 INSTALL_PREFIX = /usr/local/$(SPK_NAME)
 
 POST_STRIP_TARGET = znc_extra_install
+
+BUSYBOX_CONFIG = usrmng
+ENV += BUSYBOX_CONFIG="$(BUSYBOX_CONFIG)"
 
 include ../../mk/spksrc.spk.mk
 
@@ -45,4 +47,3 @@ znc_extra_install:
 		convert $(SPK_ICON) -thumbnail $${size}x$${size} \
 		        $(STAGING_DIR)/app/images/$(SPK_NAME)-$${size}.png ; \
 	done
-

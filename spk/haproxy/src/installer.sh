@@ -6,9 +6,11 @@ DNAME="HAProxy"
 
 # Others
 INSTALL_DIR="/usr/local/${PACKAGE}"
+SSS="/var/packages/${PACKAGE}/scripts/start-stop-status"
 PYTHON_DIR="/usr/local/python"
 PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/env/bin:${PYTHON_DIR}/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/syno/sbin:/usr/syno/bin"
-RUNAS="haproxy"
+USER="haproxy"
+GROUP="nobody"
 VIRTUALENV="${PYTHON_DIR}/bin/virtualenv"
 TMP_DIR="${SYNOPKG_PKGDEST}/../../@tmp"
 
@@ -24,7 +26,7 @@ postinst ()
     ln -s ${SYNOPKG_PKGDEST} ${INSTALL_DIR}
 
     # Create user
-    adduser -h ${INSTALL_DIR}/var -g "${DNAME} User" -G users -s /bin/sh -S -D ${RUNAS}
+    adduser -h ${INSTALL_DIR}/var -g "${DNAME} User" -G ${GROUP} -s /bin/sh -S -D ${USER}
 
     # Edit the configuration according to the wizzard
     sed -i -e "s/@user@/${wizard_user:=admin}/g" ${INSTALL_DIR}/var/haproxy.cfg.tpl
@@ -41,7 +43,7 @@ postinst ()
     ${INSTALL_DIR}/env/bin/python ${INSTALL_DIR}/app/setup.py
 
     # Correct the files ownership
-    chown -R ${RUNAS}:root ${SYNOPKG_PKGDEST}
+    chown -R ${USER}:root ${SYNOPKG_PKGDEST}
 
     # Index help files
     pkgindexer_add ${INSTALL_DIR}/app/index.conf > /dev/null
@@ -52,9 +54,13 @@ postinst ()
 
 preuninst ()
 {
+    # Stop the package
+    ${SSS} stop > /dev/null
+
     # Remove the user (if not upgrading)
     if [ "${SYNOPKG_PKG_STATUS}" != "UPGRADE" ]; then
-        deluser ${RUNAS}
+        delgroup ${USER} ${GROUP}
+        deluser ${USER}
     fi
 
     # Remove help files
@@ -74,6 +80,9 @@ postuninst ()
 
 preupgrade ()
 {
+    # Stop the package
+    ${SSS} stop > /dev/null
+
     # Save some stuff
     rm -fr ${TMP_DIR}/${PACKAGE}
     mkdir -p ${TMP_DIR}/${PACKAGE}
@@ -87,7 +96,7 @@ postupgrade ()
     # Restore some stuff
     rm -fr ${INSTALL_DIR}/var
     mv ${TMP_DIR}/${PACKAGE}/var ${INSTALL_DIR}/
-    chown -R ${RUNAS}:root ${INSTALL_DIR}/var
+    chown -R ${USER}:root ${INSTALL_DIR}/var
     rm -fr ${TMP_DIR}/${PACKAGE}
 
     exit 0

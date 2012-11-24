@@ -35,13 +35,23 @@ include ../../mk/spksrc.configure.mk
 compile: configure
 include ../../mk/spksrc.compile.mk
 
+install: compile
+include ../../mk/spksrc.install.mk
+
 .PHONY: cat_PLIST
 cat_PLIST:
 	@true
+
+dependency-tree:
+	@echo `perl -e 'print "\\\t" x $(MAKELEVEL),"\n"'`+ $(NAME)
+	@for depend in $(DEPENDS) ; \
+	do \
+	  $(MAKE) --no-print-directory -C ../../$$depend dependency-tree ; \
+	done
 
 ### Clean rules
 clean:
 	rm -fr $(WORK_DIR)
 
-all: compile
+all: install
 

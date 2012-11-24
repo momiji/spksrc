@@ -1,12 +1,13 @@
 SPK_NAME = sabnzbd
-SPK_VERS = 0.7.4
-SPK_REV = 2
+SPK_VERS = 0.7.6
+SPK_REV = 3
 SPK_ICON = src/sabnzbd.png
 DSM_UI_DIR = app
+CHANGELOG = "1. Update to 0.7.6\\\n2. Improve user management\\\n3. Update to new Python"
 
 DEPENDS  = cross/busybox cross/par2cmdline cross/unrar cross/$(SPK_NAME)
 
-SPK_DEPENDS = "python>=2.7.3-1"
+SPK_DEPENDS = "python>=2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = SABnzbd makes Usenet as simple and streamlined as possible by automating everything we can. All you have to do is add an .nzb. SABnzbd takes over from there, where it will be automatically downloaded, verified, repaired, extracted and filed away with zero human interaction.
@@ -28,15 +29,14 @@ INSTALL_PREFIX = /usr/local/$(SPK_NAME)
 
 POST_STRIP_TARGET = sabnzbd_extra_install
 
-include ../../mk/spksrc.spk.mk
-
-
-ifeq ($(findstring $(ARCH),88f5281 bromolow cedarview powerpc ppc824x ppc853x ppc854x x86),$(ARCH))
-# No support for building ionice
-ENV += BUSYBOX_CONFIG=src/nice_defconfig
-else
-ENV += BUSYBOX_CONFIG=src/niceionice_defconfig
+BUSYBOX_CONFIG  = nice
+# Add ionice for ARCHs that support it
+ifeq ($(findstring $(ARCH),88f6281 qoriq),$(ARCH))
+BUSYBOX_CONFIG += ionice
 endif
+ENV += BUSYBOX_CONFIG="$(BUSYBOX_CONFIG)"
+
+include ../../mk/spksrc.spk.mk
 
 .PHONY: sabnzbd_extra_install
 sabnzbd_extra_install: $(STAGING_DIR)/share/requirements.pybundle
@@ -56,5 +56,4 @@ sabnzbd_extra_install: $(STAGING_DIR)/share/requirements.pybundle
 $(STAGING_DIR)/share/requirements.pybundle:
 	@$(MSG) "Bundling requirements"
 	install -m 755 -d $(STAGING_DIR)/share
-	@cd $(WORK_DIR) && pip bundle --use-mirrors $@ configobj
-
+	@cd $(WORK_DIR) && $(PIP) bundle $@ configobj

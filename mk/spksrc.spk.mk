@@ -58,6 +58,9 @@ ifneq ($(strip $(BETA)),)
 	@echo report_url=\"https://github.com/SynoCommunity/spksrc/issues\" >> $@
 	@echo beta=1 >> $@
 endif
+ifneq ($(strip $(HELPURL)),)
+	@echo helpurl=\"$(HELPURL)\" >> $@
+endif
 ifneq ($(strip $(INSTALL_DEP_SERVICES)),)
 	@echo install_dep_services=\"$(INSTALL_DEP_SERVICES)\" >> $@
 endif
@@ -68,6 +71,9 @@ ifneq ($(strip $(INSTUNINST_RESTART_SERVICES)),)
 	@echo instuninst_restart_services=\"$(INSTUNINST_RESTART_SERVICES)\" >> $@
 endif
 	@echo reloadui=\"$(RELOAD_UI)\" >> $@
+ifneq ($(strip $(STARTABLE)),)
+	@echo startable=\"$(STARTABLE)\" >> $@
+endif
 	@echo displayname=\"$(DISPLAY_NAME)\" >> $@
 ifneq ($(strip $(DSM_UI_DIR)),)
 	@echo dsmuidir=\"$(DSM_UI_DIR)\" >> $@
@@ -216,6 +222,13 @@ all: package
 SUPPORTED_TCS = $(notdir $(wildcard ../../toolchains/syno-*))
 SUPPORTED_ARCHS = $(notdir $(subst -,/,$(SUPPORTED_TCS)))
 
+dependency-tree:
+	@echo `perl -e 'print "\\\t" x $(MAKELEVEL),"\n"'`+ $(NAME)
+	@for depend in $(DEPENDS) ; \
+	do \
+	  $(MAKE) --no-print-directory -C ../../$$depend dependency-tree ; \
+	done
+
 .PHONY: all-archs
 all-archs: $(addprefix arch-,$(SUPPORTED_ARCHS))
 
@@ -224,12 +237,11 @@ publish-all-archs: $(addprefix publish-arch-,$(SUPPORTED_ARCHS))
 
 arch-%:
 	@$(MSG) Building package for arch $*
-	-@env $(MAKE) ARCH=$*
+	-@MAKEFLAGS= $(MAKE) ARCH=$*
 
 publish-arch-%:
 	@$(MSG) Building and publishing package for arch $*
-	-@env $(MAKE) ARCH=$* publish
+	-@MAKEFLAGS= $(MAKE) ARCH=$* publish
 
 changelog:
 	@echo $(shell git log --pretty=format:"- %s" -- $(PWD))
-

@@ -7,7 +7,7 @@ DSM_APP_NAME = SYNOCOMMUNITY.NZBConfig.AppInstance
 CHANGELOG = "1. Fix detection of SickBeard's newsgrabber\\\n2. Update for NZBGet 9.0"
 BETA = 1
 
-SPK_DEPENDS = "python>=2.7.3-1"
+SPK_DEPENDS = "python>=2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Configuration interface for your packages SABnzbd, NZBGet, SickBeard, CouchPotato and Headphones
@@ -51,5 +51,4 @@ nzbconfig_extra_install: $(STAGING_DIR)/share/requirements.pybundle
 $(STAGING_DIR)/share/requirements.pybundle:
 	@$(MSG) "Bundling requirements"
 	install -m 755 -d $(STAGING_DIR)/share
-	@cd $(WORK_DIR) && pip bundle --use-mirrors $@ pyextdirect==0.3.1 configobj
-
+	@cd $(WORK_DIR) && $(PIP) bundle $@ pyextdirect==0.3.1 configobj

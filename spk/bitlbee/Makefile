@@ -1,8 +1,9 @@
 SPK_NAME = bitlbee
-SPK_VERS = 3.0.5
-SPK_REV = 1
+SPK_VERS = 3.0.6
+SPK_REV = 3
 SPK_ICON = src/bitlbee.png
 DSM_UI_DIR = app
+BETA = 1
 
 DEPENDS = cross/busybox cross/$(SPK_NAME)
 
@@ -23,6 +24,9 @@ ADDITIONAL_SCRIPTS =
 INSTALL_PREFIX = /usr/local/$(SPK_NAME)
 
 POST_STRIP_TARGET = bitlbee_extra_install
+
+BUSYBOX_CONFIG = usrmng
+ENV += BUSYBOX_CONFIG="$(BUSYBOX_CONFIG)"
 
 include ../../mk/spksrc.spk.mk
 

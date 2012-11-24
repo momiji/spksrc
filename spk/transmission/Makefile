@@ -1,8 +1,9 @@
 SPK_NAME = transmission
-SPK_VERS = 2.71
-SPK_REV = 1
+SPK_VERS = 2.72
+SPK_REV = 2
 SPK_ICON = src/transmission.png
 DSM_UI_DIR = app
+BETA = 1
 
 DEPENDS = cross/busybox cross/$(SPK_NAME)
 
@@ -27,6 +28,9 @@ INSTALL_PREFIX = /usr/local/$(SPK_NAME)
 
 POST_STRIP_TARGET = transmission_extra_install
 
+BUSYBOX_CONFIG = usrmng
+ENV += BUSYBOX_CONFIG="$(BUSYBOX_CONFIG)"
+
 include ../../mk/spksrc.spk.mk
 
 .PHONY: transmission_extra_install
@@ -42,4 +46,3 @@ transmission_extra_install:
 	    convert $(SPK_ICON) -thumbnail $${size}x$${size} \
 	            $(STAGING_DIR)/app/images/$(SPK_NAME)-$${size}.png ; \
 	done
-

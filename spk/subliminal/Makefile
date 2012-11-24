@@ -1,12 +1,12 @@
 SPK_NAME = subliminal
 SPK_VERS = 0.6.2
-SPK_REV = 7
+SPK_REV = 8
 SPK_ICON = src/subliminal.png
 DSM_UI_DIR = app
-CHANGELOG =
+BETA = 1
 
 DEPENDS =
-SPK_DEPENDS = "python>=2.7.3-1"
+SPK_DEPENDS = "python>=2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Subliminal allows you automatically download best-matching subtitles for your movies and tv shows on your DiskStation. This package is named after Subliminal, the Python library used to search and download subtitles.
@@ -66,4 +66,4 @@ subliminal_extra_install: $(STAGING_DIR)/share/requirements.pybundle
 $(STAGING_DIR)/share/requirements.pybundle:
 	@$(MSG) "Bundling requirements"
 	install -m 755 -d $(STAGING_DIR)/share
-	@cd $(WORK_DIR) && pip bundle --use-mirrors $@ subliminal==$(SPK_VERS) pyextdirect==0.3.1 configobj flask
+	@cd $(WORK_DIR) && $(PIP) bundle $@ subliminal==$(SPK_VERS) pyextdirect==0.3.1 configobj flask

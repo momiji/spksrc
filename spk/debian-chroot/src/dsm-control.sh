@@ -12,23 +12,31 @@ CHROOTTARGET=`realpath ${INSTALL_DIR}/var/chroottarget`
 
 start_daemon ()
 {
-    # Mount
-    mount --bind /proc ${CHROOTTARGET}/proc
-    mount --bind /dev/pts ${CHROOTTARGET}/dev/pts
-    mount --bind /sys ${CHROOTTARGET}/sys
+    # Mount if install is finished
+    if [ -f ${INSTALL_DIR}/var/installed ]; then
+        # Make sure we don't mount twice
+        grep -q "${CHROOTTARGET}/proc " /proc/mounts || mount -t proc proc ${CHROOTTARGET}/proc
+        grep -q "${CHROOTTARGET}/sys " /proc/mounts || mount -t sysfs sys ${CHROOTTARGET}/sys
+        grep -q "${CHROOTTARGET}/dev " /proc/mounts || mount -o bind /dev ${CHROOTTARGET}/dev
+        grep -q "${CHROOTTARGET}/dev/pts " /proc/mounts || mount -o bind /dev/pts ${CHROOTTARGET}/dev/pts
+    fi
 }
 
 stop_daemon ()
 {
+    # Stop running services
+    ${INSTALL_DIR}/app/stop.py
+
     # Unmount
-    umount ${CHROOTTARGET}/proc
     umount ${CHROOTTARGET}/dev/pts
+    umount ${CHROOTTARGET}/dev
     umount ${CHROOTTARGET}/sys
+    umount ${CHROOTTARGET}/proc
 }
 
 daemon_status ()
 {
-    `grep -q "/proc ${CHROOTTARGET}/proc " /proc/mounts` || `grep -q "/dev/pts ${CHROOTTARGET}/dev/pts " /proc/mounts` || `grep -q "/sys ${CHROOTTARGET}/sys " /proc/mounts`
+    `grep -q "${CHROOTTARGET}/proc " /proc/mounts` && `grep -q "${CHROOTTARGET}/sys " /proc/mounts` && `grep -q "${CHROOTTARGET}/dev " /proc/mounts` && `grep -q "${CHROOTTARGET}/dev/pts " /proc/mounts`
 }
 
 
@@ -69,4 +77,3 @@ case $1 in
         exit 1
         ;;
 esac
-

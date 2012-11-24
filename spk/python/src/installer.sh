@@ -26,6 +26,12 @@ postinst ()
     ${INSTALL_DIR}/bin/python -m compileall -q -f ${INSTALL_DIR}/lib/python2.7
     ${INSTALL_DIR}/bin/python -OO -m compileall -q -f ${INSTALL_DIR}/lib/python2.7
 
+    # Log installation informations
+    ${INSTALL_DIR}/bin/python --version > ${INSTALL_DIR}/install.log 2>&1
+    echo "" >> ${INSTALL_DIR}/install.log
+    echo "System installed modules:" >> ${INSTALL_DIR}/install.log
+    ${INSTALL_DIR}/bin/pip freeze >> ${INSTALL_DIR}/install.log
+
     exit 0
 }
 

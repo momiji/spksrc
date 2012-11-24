@@ -1,13 +1,13 @@
 SPK_NAME = haproxy
-SPK_VERS = 1.5~ss20121019
-SPK_REV = 1
+SPK_VERS = 1.5~dev13
+SPK_REV = 2
 SPK_ICON = src/haproxy.png
 DSM_UI_DIR = app
 CHANGELOG =
 BETA = 1
 
 DEPENDS = cross/haproxy
-SPK_DEPENDS = "python>=2.7.3-1"
+SPK_DEPENDS = "python>=2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications.
@@ -63,4 +63,4 @@ haproxy_extra_install: $(STAGING_DIR)/share/requirements.pybundle
 $(STAGING_DIR)/share/requirements.pybundle:
 	@$(MSG) "Bundling requirements"
 	install -m 755 -d $(STAGING_DIR)/share
-	@cd $(WORK_DIR) && pip bundle --use-mirrors $@ pyextdirect==0.3.1 flask
+	@cd $(WORK_DIR) && $(PIP) bundle $@ pyextdirect==0.3.1 flask

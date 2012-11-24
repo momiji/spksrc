@@ -15,7 +15,7 @@ PID_FILE="${INSTALL_DIR}/var/gateone.pid"
 RUNAS="gateone"
 
 
-start_daemon()
+start_daemon ()
 {
     # Copy certificate
     cp  /usr/syno/etc/ssl/ssl.crt/server.crt /usr/syno/etc/ssl/ssl.key/server.key ${INSTALL_DIR}/ssl/
@@ -24,30 +24,32 @@ start_daemon()
     su - ${RUNAS} -c "PATH=${PATH} nohup ${PYTHON} ${GATEONE} --pid_file=${PID_FILE} --config=${CFG_FILE} > ${INSTALL_DIR}/var/gateone_startup.log &"
 }
 
-stop_daemon()
+stop_daemon ()
 {
     kill `cat ${PID_FILE}`
-    wait_for_status 1 20
+    wait_for_status 1 20 || kill -9 `cat ${PID_FILE}`
     rm -f ${PID_FILE}
 }
 
-daemon_status()
+daemon_status ()
 {
-    if [ -f ${PID_FILE} ] && [ -d /proc/`cat ${PID_FILE}` ]; then
-        return 0
+    if [ -f ${PID_FILE} ] && kill -0 `cat ${PID_FILE}` > /dev/null 2>&1; then
+        return
     fi
+    rm -f ${PID_FILE}
     return 1
 }
 
-wait_for_status()
+wait_for_status ()
 {
     counter=$2
     while [ ${counter} -gt 0 ]; do
         daemon_status
-        [ $? -eq $1 ] && break
+        [ $? -eq $1 ] && return
         let counter=counter-1
         sleep 1
     done
+    return 1
 }
 
 
@@ -84,5 +86,3 @@ case $1 in
         exit 1
         ;;
 esac
-
-

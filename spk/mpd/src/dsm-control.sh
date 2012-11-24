@@ -32,14 +32,13 @@ stop_daemon ()
 
 daemon_status ()
 {
-    # Check for pid file and an existing process with that pid
     if [ -f ${PID_FILE} ] && [ -d /proc/`cat ${PID_FILE}` ]; then
-        return 0
+        return
     fi
     return 1
 }
 
-wait_for_status()
+wait_for_status ()
 {
     counter=$2
     while [ ${counter} -gt 0 ]; do

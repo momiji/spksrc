@@ -38,4 +38,3 @@ darkstat_extra_install:
 	    convert $(SPK_ICON) -thumbnail $${size}x$${size} \
 	            $(STAGING_DIR)/app/images/$(SPK_NAME)-$${size}.png ; \
 	done
-

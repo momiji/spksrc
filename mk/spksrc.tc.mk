@@ -42,7 +42,11 @@ TOOLS = ld cpp nm cc:gcc as ranlib cxx:g++ ar strip objdump readelf
 CFLAGS += $(TC_CFLAGS)
 CFLAGS += -I$(INSTALL_DIR)/$(INSTALL_PREFIX)/include
 
+CPPFLAGS += $(TC_CPPFLAGS)
 CPPFLAGS += -I$(INSTALL_DIR)/$(INSTALL_PREFIX)/include
+
+CXXFLAGS += $(TC_CXXFLAGS)
+CXXFLAGS += -I$(INSTALL_DIR)/$(INSTALL_PREFIX)/include
 
 LDFLAGS += $(TC_LDFLAGS)
 LDFLAGS += -L$(INSTALL_DIR)/$(INSTALL_PREFIX)/lib 
@@ -61,10 +65,16 @@ tc_vars: patch
 	done
 	@echo TC_ENV += CFLAGS=\"$(CFLAGS) $$\(ADDITIONAL_CFLAGS\)\"
 	@echo TC_ENV += CPPFLAGS=\"$(CPPFLAGS) $$\(ADDITIONAL_CPPFLAGS\)\"
+	@echo TC_ENV += CXXFLAGS=\"$(CXXFLAGS) $$\(ADDITIONAL_CXXFLAGS\)\"
 	@echo TC_ENV += LDFLAGS=\"$(LDFLAGS) $$\(ADDITIONAL_LDFLAGS\)\"
 	@echo TC_CONFIGURE_ARGS := --host=$(TC_TARGET) --build=i686-pc-linux
 	@echo TC_TARGET := $(TC_TARGET)
-	@echo TC_ARCH := $(shell expr "$(TC_TARGET)" : '\([^-]*\)' )
+	@echo TC_PREFIX := $(TC_PREFIX)-
+	@echo TC_PATH := $(WORK_DIR)/$(TC_BASE_DIR)/bin/
+	@echo CFLAGS := $(CFLAGS) $$\(ADDITIONAL_CFLAGS\)
+	@echo CPPFLAGS := $(CPPFLAGS) $$\(ADDITIONAL_CPPFLAGS\)
+	@echo CXXFLAGS := $(CXXFLAGS) $$\(ADDITIONAL_CXXFLAGS\)
+	@echo LDFLAGS := $(LDFLAGS) $$\(ADDITIONAL_LDFLAGS\)
 
 
 ### Clean rules

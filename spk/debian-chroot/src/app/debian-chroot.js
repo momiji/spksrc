@@ -8,7 +8,7 @@ _V = function (category, element) {
 
 // Direct API
 Ext.Direct.addProvider({
-    "url": "3rdparty/debian-chroot/debian-chroot.cgi",
+    "url": "3rdparty/debian-chroot/debian-chroot.cgi/direct/router",
     "namespace": "SYNOCOMMUNITY.DebianChroot.Remote",
     "type": "remoting",
     "actions": {
@@ -51,36 +51,11 @@ Ext.Direct.addProvider({
 });
 SYNOCOMMUNITY.DebianChroot.Poller = new Ext.direct.PollingProvider({
     'type': 'polling',
-    'url': '3rdparty/debian-chroot/debian-chroot-poll.cgi',
+    'url': '3rdparty/debian-chroot/debian-chroot.cgi/direct/poller',
     'interval': 10000
 });
 Ext.Direct.addProvider(SYNOCOMMUNITY.DebianChroot.Poller);
 SYNOCOMMUNITY.DebianChroot.Poller.disconnect();
-
-// Fix for RadioGroup reset bug
-Ext.form.RadioGroup.override({
-    reset: function () {
-        if (this.originalValue) {
-            this.setValue(this.originalValue.inputValue);
-        } else {
-            this.eachItem(function (c) {
-                if (c.reset) {
-                    c.reset();
-                }
-            });
-        }
-
-        (function () {
-            this.clearInvalid();
-        }).defer(50, this);
-    },
-    isDirty: function () {
-        if (this.disabled || !this.rendered) {
-            return false;
-        }
-        return String(this.getValue().inputValue) !== String(this.originalValue.inputValue);
-    }
-});
 
 // Const
 SYNOCOMMUNITY.DebianChroot.DEFAULT_HEIGHT = 300;
@@ -582,6 +557,13 @@ SYNOCOMMUNITY.DebianChroot.PanelOverview = Ext.extend(SYNOCOMMUNITY.DebianChroot
     onStatus: function (response) {
         this.getForm().findField("install_status").setValue(_V("ui", response.data.installed));
         this.getForm().findField("running_services").setValue(response.data.running_services);
+        if (response.data.installed == "installing") {
+            Ext.getCmp("synocommunity-debianchroot-do_update").disable();
+            Ext.getCmp("synocommunity-debianchroot-do_upgrade").disable();
+        } else {
+            Ext.getCmp("synocommunity-debianchroot-do_update").enable();
+            Ext.getCmp("synocommunity-debianchroot-do_upgrade").enable();
+        }
     },
     onActivate: function () {
         Ext.Direct.on("status", this.onStatus, this);
@@ -596,6 +578,10 @@ SYNOCOMMUNITY.DebianChroot.PanelOverview = Ext.extend(SYNOCOMMUNITY.DebianChroot
                         this.owner.setStatusOK({
                             text: action.result.data.updates + " " + _V("ui", "updates_available")
                         });
+                    }
+                    if (action.result.data.installed == "installing") {
+                        Ext.getCmp("synocommunity-debianchroot-do_update").disable();
+                        Ext.getCmp("synocommunity-debianchroot-do_upgrade").disable();
                     }
                     this.getEl().unmask();
                     SYNOCOMMUNITY.DebianChroot.Poller.connect();
