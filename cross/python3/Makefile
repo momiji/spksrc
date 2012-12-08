@@ -12,10 +12,11 @@ HOMEPAGE = http://www.python.org/
 COMMENT  = Python Programming Language
 LICENSE  =
 
+BUILD_ARCH = $(shell expr "$(TC_TARGET)" : '\([^-]*\)' )
 HOST_ARCH = $(shell uname -m)
 HOSTPYTHON_NATIVE = $(WORK_DIR)/$(PKG_DIR)/hostpython
 HOSTPYTHON_LIB_NATIVE = $(WORK_DIR)/$(PKG_DIR)/build/lib.linux-$(HOST_ARCH)-3.3
-PYTHON_LIB_CROSS = $(WORK_DIR)/$(PKG_DIR)/build/lib.linux-$(TC_ARCH)-3.3
+PYTHON_LIB_CROSS = $(WORK_DIR)/$(PKG_DIR)/build/lib.linux-$(BUILD_ARCH)-3.3
 HOSTPGEN_NATIVE = $(WORK_DIR)/$(PKG_DIR)/hostpgen
 PYTHON_LIB_DIR = lib/python3.3
 
