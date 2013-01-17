@@ -1,18 +1,13 @@
 SPK_NAME = python
 SPK_VERS = 2.7.3
-SPK_REV = 3
+SPK_REV = 4
 SPK_ICON = src/python.png
-BETA = 1
 
 DEPENDS  = cross/busybox cross/$(SPK_NAME)
-DEPENDS += cross/setuptools cross/pip cross/virtualenv cross/pyopenssl
+DEPENDS += cross/distribute cross/distutils2 cross/pip cross/virtualenv cross/pyopenssl
 DEPENDS += cross/pycrypto cross/pycurl cross/pil cross/cheetah cross/yenc
 DEPENDS += cross/sqlalchemy cross/pyaudio cross/pyalsa cross/lxml cross/twisted
 DEPENDS += cross/zope.interface cross/markupsafe
-# Add libtorrent for ARCHs that support it
-ifneq ($(findstring $(ARCH),88f5281 powerpc ppc824x ppc853x ppc854x),$(ARCH))
-DEPENDS += cross/libtorrent
-endif
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Python Programming Language. This package is not startable, it is just required by other packages as dependency.
@@ -21,7 +16,7 @@ DESCRIPTION_SPN = Lenguaje de programación Python. Este paquente no se inicia, 
 RELOAD_UI = yes
 STARTABLE = no
 DISPLAY_NAME = Python
-CHANGELOG = "1. Update existing modules\\\n2. Add modules Twisted, zope.interface and MarkupSafe\\\n3. Add libtorrent for some architectures\\\n4. Enable unicode usc4\\\n5. Make the SPK not startable"
+CHANGELOG = "1. Update existing modules  and remove libtorrent\\\n2. Fix install for legacy archs\\\n3. Use 64-bit toolchains for bromolow, cedarview and x86"
 
 HOMEPAGE   = http://www.python.org/
 LICENSE    =
@@ -44,7 +39,6 @@ include ../../mk/spksrc.spk.mk
 
 .PHONY: python_cleanup
 python_cleanup:
-	rm $(STAGING_DIR)/$(PYTHON_LIB_DIR)/config/libpython*.a
-	find $(STAGING_DIR)/$(PYTHON_LIB_DIR) -type d -regex '.*/[Tt]ests?' | xargs rm -fr
+	rm -f $(STAGING_DIR)/$(PYTHON_LIB_DIR)/config/libpython*.a
+	rm -fr $(STAGING_DIR)/$(PYTHON_LIB_DIR)/test/
 	find $(STAGING_DIR)/$(PYTHON_LIB_DIR) -type f -regex '.*\.py[co]' | xargs rm -f
-	find $(STAGING_DIR)/$(PYTHON_LIB_DIR) -type f -regex '.*\.py' | xargs chmod 444

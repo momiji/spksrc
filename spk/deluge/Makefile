@@ -7,7 +7,7 @@ BETA = 1
 
 DEPENDS  = cross/$(SPK_NAME)
 
-SPK_DEPENDS = "python>=2.7.3-3"
+SPK_DEPENDS = "python>2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Deluge is a full-featured  BitTorrent client for Linux, OS X, Unix and Windows. It uses libtorrent in its backend and features multiple user-interfaces including: GTK+, web and console. It has been designed using the client server model with a daemon process that handles all the bittorrent activity. The Deluge daemon is able to run on headless machines with the user-interfaces being able to connect remotely from any platform.
@@ -33,6 +33,7 @@ include ../../mk/spksrc.spk.mk
 .PHONY: deluge_extra_install
 deluge_extra_install: $(STAGING_DIR)/share/requirements.pybundle
 	install -m 755 -d $(STAGING_DIR)/var
+	install -m 644 src/config.yml $(STAGING_DIR)/var/config.yml
 	install -m 755 -d $(STAGING_DIR)/app
 	install -m 644 src/app/config $(STAGING_DIR)/app/config
 	install -m 755 src/app/deluge.cgi.py $(STAGING_DIR)/app/deluge.cgi

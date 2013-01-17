@@ -1,13 +1,12 @@
 SPK_NAME = sabnzbd
-SPK_VERS = 0.7.6
-SPK_REV = 3
+SPK_VERS = 0.7.9
+SPK_REV = 6
 SPK_ICON = src/sabnzbd.png
 DSM_UI_DIR = app
-CHANGELOG = "1. Update to 0.7.6\\\n2. Improve user management\\\n3. Update to new Python"
 
 DEPENDS  = cross/busybox cross/par2cmdline cross/unrar cross/$(SPK_NAME)
 
-SPK_DEPENDS = "python>=2.7.3-3"
+SPK_DEPENDS = "python>2.7.3-3"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = SABnzbd makes Usenet as simple and streamlined as possible by automating everything we can. All you have to do is add an .nzb. SABnzbd takes over from there, where it will be automatically downloaded, verified, repaired, extracted and filed away with zero human interaction.

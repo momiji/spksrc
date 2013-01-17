@@ -1,8 +1,9 @@
 SPK_NAME = znc
 SPK_VERS = 1.0
-SPK_REV = 3
+SPK_REV = 5
 SPK_ICON = src/znc.png
 DSM_UI_DIR = app
+CHANGELOG = "1. Update c-ares to 1.9.1\\\n2. Use 64-bit toolchains for bromolow, cedarview and x86"
 
 DEPENDS = cross/busybox cross/$(SPK_NAME)
 
@@ -13,7 +14,6 @@ DESCRIPTION_SPN = IRC bouncer avanzado. Un IRC bouncer no es más que un proxy p
 ADMIN_PORT = 8250
 RELOAD_UI = yes
 DISPLAY_NAME = ZNC
-CHANGELOG = "1. Improve user management"
 
 HOMEPAGE = http://wiki.znc.in/
 LICENSE  =

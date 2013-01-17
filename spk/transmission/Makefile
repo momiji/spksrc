@@ -1,9 +1,8 @@
 SPK_NAME = transmission
-SPK_VERS = 2.72
-SPK_REV = 2
+SPK_VERS = 2.76
+SPK_REV = 4
 SPK_ICON = src/transmission.png
 DSM_UI_DIR = app
-BETA = 1
 
 DEPENDS = cross/busybox cross/$(SPK_NAME)
 
