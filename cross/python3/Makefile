@@ -45,10 +45,11 @@ myPostPatch:
 	$(RUN) sed -e 's#@INSTALL_PREFIX@#$(INSTALL_PREFIX)#' -i Lib/mimetypes.py
 
 myConfigure:
-	cd $(WORK_DIR)/$(PKG_DIR) && CC= CPP= CXX= STRIP= RANLIB= READELF= AS= AR= ./configure --prefix=$(WORK_DIR)/native
-	cd $(WORK_DIR)/$(PKG_DIR) && $(MAKE)
+	cd $(WORK_DIR)/$(PKG_DIR) && CC= CPP= CXX= STRIP= RANLIB= READELF= AS= AR= CFLAGS= CPPFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix=$(WORK_DIR)/native
+	cd $(WORK_DIR)/$(PKG_DIR) && CC= CPP= CXX= STRIP= RANLIB= READELF= AS= AR= CFLAGS= CPPFLAGS= CXXFLAGS= LDFLAGS= $(MAKE)
 	cd $(WORK_DIR)/$(PKG_DIR) && tar zcf build.tgz build
 	cd $(WORK_DIR)/$(PKG_DIR) && cp python hostpython
+	cd $(WORK_DIR)/$(PKG_DIR) && cp config.log hostconfig.log
 	cd $(WORK_DIR)/$(PKG_DIR) && make distclean
 	cd $(WORK_DIR)/$(PKG_DIR) && tar zxf build.tgz
 	cd $(WORK_DIR)/$(PKG_DIR) && rm build.tgz
