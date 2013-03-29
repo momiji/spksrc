@@ -1,0 +1,17 @@
+--- configure.ac.orig	2013-03-29 21:40:25.577395550 +0100
++++ configure.ac	    2013-03-29 21:38:30.076527207 +0100
+@@ -1088,11 +1088,11 @@
+ 		# debug builds.
+ 		OPT="-g -O0 -Wall $STRICT_PROTO"
+ 	    else
+-		OPT="-g $WRAP -O3 -Wall $STRICT_PROTO"
++		OPT="-g $WRAP -O0 -Wall $STRICT_PROTO"
+ 	    fi
+ 	    ;;
+ 	*)
+-	    OPT="-O3 -Wall $STRICT_PROTO"
++	    OPT="-O0 -Wall $STRICT_PROTO"
+ 	    ;;
+ 	esac
+ 	case $ac_sys_system in
+
