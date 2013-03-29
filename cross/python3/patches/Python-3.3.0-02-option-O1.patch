@@ -5,12 +5,12 @@
  		OPT="-g -O0 -Wall $STRICT_PROTO"
  	    else
 -		OPT="-g $WRAP -O3 -Wall $STRICT_PROTO"
-+		OPT="-g $WRAP -O1 -Wall $STRICT_PROTO"
++		OPT="-g $WRAP -O0 -Wall $STRICT_PROTO"
  	    fi
  	    ;;
  	*)
 -	    OPT="-O3 -Wall $STRICT_PROTO"
-+	    OPT="-O1 -Wall $STRICT_PROTO"
++	    OPT="-O0 -Wall $STRICT_PROTO"
  	    ;;
  	esac
  	case $ac_sys_system in
