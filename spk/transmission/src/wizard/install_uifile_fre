@@ -15,4 +15,21 @@
             "desc": "Répertoire surveillé"
         }]
     }]
+}, {
+    "step_title": "Configuration de base",
+    "items": [{
+        "type": "textfield",
+        "desc": "Nom d'utilisateur de l'interface web. admin par défaut",
+        "subitems": [{
+            "key": "wizard_username",
+            "desc": "Nom d'utilisateur"
+        }]
+    }, {
+        "type": "password",
+        "desc": "Mot de passe de l'interface web. admin par défaut",
+        "subitems": [{
+            "key": "wizard_password",
+            "desc": "Mot de passe"
+        }]
+    }]
 }]

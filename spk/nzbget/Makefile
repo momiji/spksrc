@@ -1,6 +1,6 @@
 SPK_NAME = nzbget
-SPK_VERS = 9.0
-SPK_REV = 6
+SPK_VERS = 9.1
+SPK_REV = 7
 SPK_ICON = src/nzbget.png
 DSM_UI_DIR = app
 
@@ -13,7 +13,7 @@ DESCRIPTION_SPN = NZBGet es una aplicación de linea de comandos escrita en C++ 
 RELOAD_UI = yes
 ADMIN_PORT = 6789
 DISPLAY_NAME = NZBGet
-CHANGELOG = "1. Use 64-bit toolchains for bromolow, cedarview and x86"
+CHANGELOG = "1. Uninstallation required"
 
 HOMEPAGE = http://nzbget.sourceforge.net/
 LICENSE  =

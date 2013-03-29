@@ -1,0 +1,13 @@
+{
+    ".url": {
+        "com.synocommunity.packages.newznab": {
+            "title": "Newznab",
+            "desc": "Newznab",
+            "icon": "images/newznab-{0}.png",
+            "type": "url",
+            "url": "/newznab/www",
+            "allUsers": true,
+            "grantPrivilege": "local"
+        }
+    }
+}
