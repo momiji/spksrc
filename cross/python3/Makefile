@@ -17,7 +17,7 @@ GNU_CONFIGURE = 1
 CONFIGURE_ARGS  = --enable-shared --enable-ipv6 PYTHON_FOR_BUILD=$(HOSTPYTHON) PGEN_FOR_BUILD=$(HOSTPGEN)
 CONFIGURE_ARGS += ac_cv_buggy_getaddrinfo=no ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no ac_cv_have_long_long_format=yes
 CONFIGURE_ARGS += ac_cv_x87_double_rounding=yes
-ifneq ($(findstring $(ARCH), powerpc),)
+ifneq ($(findstring $(ARCH), powerpc ppc824x),)
 CONFIGURE_ARGS += ac_cv_func_clock_gettime=no ac_cv_lib_rt_clock_gettime=no
 endif
 
