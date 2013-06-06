@@ -1,9 +1,9 @@
 SPK_NAME = git
-SPK_VERS = 1.8.2
-SPK_REV = 1
+SPK_VERS = 1.8.3
+SPK_REV = 3
 SPK_ICON = src/git.png
 
-DEPENDS = cross/$(SPK_NAME)
+DEPENDS = cross/busybox cross/$(SPK_NAME)
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
@@ -19,5 +19,8 @@ SSS_SCRIPT       = src/dsm-control.sh
 ADDITIONAL_SCRIPTS =
 
 INSTALL_PREFIX = /usr/local/$(SPK_NAME)
+
+BUSYBOX_CONFIG = tr
+ENV += BUSYBOX_CONFIG="$(BUSYBOX_CONFIG)"
 
 include ../../mk/spksrc.spk.mk

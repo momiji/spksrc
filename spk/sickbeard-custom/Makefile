@@ -13,7 +13,7 @@ DESCRIPTION_FRE = SickBeard Custom vous permet d\\\'exécuter le fork de votre c
 ADMIN_PORT = 8083
 RELOAD_UI = yes
 DISPLAY_NAME = SickBeard Custom
-BETA = 1
+CHANGELOG = "1. Fix for git not finding the correct HOME"
 
 HOMEPAGE   = http://sickbeard.com/
 LICENSE    = GPL

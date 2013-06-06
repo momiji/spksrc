@@ -8,11 +8,12 @@ DNAME="GateOne"
 INSTALL_DIR="/usr/local/${PACKAGE}"
 SSS="/var/packages/${PACKAGE}/scripts/start-stop-status"
 PYTHON_DIR="/usr/local/python"
-PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/env/bin:${PYTHON_DIR}/bin:/usr/local/bin:/bin:/usr/bin:/usr/syno/bin"
+PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/env/bin:${PYTHON_DIR}/bin:${PATH}"
+USER="gateone"
+GROUP="nobody"
 PYTHON="${INSTALL_DIR}/env/bin/python"
 VIRTUALENV="${PYTHON_DIR}/bin/virtualenv"
 TMP_DIR="${SYNOPKG_PKGDEST}/../../@tmp"
-RUNAS="gateone"
 
 
 preinst ()
@@ -29,20 +30,19 @@ postinst ()
     ${INSTALL_DIR}/bin/busybox --install ${INSTALL_DIR}/bin
 
     # Create user
-    adduser -h ${INSTALL_DIR}/var -g "${DNAME} User" -G nobody -s /bin/sh -S -D ${RUNAS}
+    adduser -h ${INSTALL_DIR}/var -g "${DNAME} User" -G ${GROUP} -s /bin/sh -S -D ${USER}
 
     # Create a Python virtualenv
     ${VIRTUALENV} --system-site-packages ${INSTALL_DIR}/env > /dev/null
 
     # Install the bundle
-    ${INSTALL_DIR}/env/bin/pip install -U -b ${INSTALL_DIR}/var/build ${INSTALL_DIR}/share/requirements.pybundle > /dev/null
-    rm -fr ${INSTALL_DIR}/var/build
+    ${INSTALL_DIR}/env/bin/pip install --no-index -U ${INSTALL_DIR}/share/requirements.pybundle > /dev/null
 
     # Install GateOne
-    ${PYTHON} ${INSTALL_DIR}/share/GateOne/setup.py install --prefix=${INSTALL_DIR}
+    ${PYTHON} ${INSTALL_DIR}/share/GateOne/setup.py install --prefix=${INSTALL_DIR} > /dev/null
 
     # Correct the files ownership
-    chown -R ${RUNAS}:root ${SYNOPKG_PKGDEST}
+    chown -R ${USER}:root ${SYNOPKG_PKGDEST}
 
     exit 0
 }
@@ -52,9 +52,10 @@ preuninst ()
     # Stop the package
     ${SSS} stop > /dev/null
 
-    # Remove the user (if not upgrading)
-    if [ "${SYNOPKG_PKG_STATUS}" != "UPGRADE" ]; then
-        deluser ${RUNAS}
+    # Remove the user
+    if [ "${SYNOPKG_PKG_STATUS}" == "UNINSTALL" ]; then
+        delgroup ${USER} ${GROUP}
+        deluser ${USER}
     fi
 
     exit 0
@@ -86,7 +87,6 @@ postupgrade ()
     # Restore some stuff
     rm -fr ${INSTALL_DIR}/var
     mv ${TMP_DIR}/${PACKAGE}/var ${INSTALL_DIR}/
-    chown -R ${RUNAS}:root ${INSTALL_DIR}/var
     rm -fr ${TMP_DIR}/${PACKAGE}
 
     exit 0

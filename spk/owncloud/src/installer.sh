@@ -16,8 +16,9 @@ TMP_DIR="${SYNOPKG_PKGDEST}/../../@tmp"
 
 preinst ()
 {
-    # Check database
     if [ "${SYNOPKG_PKG_STATUS}" == "INSTALL" ]; then
+
+        # Check database
         if ! ${MYSQL} -u root -p"${wizard_mysql_password_root}" -e quit > /dev/null 2>&1; then
             echo "Incorrect MySQL root password"
             exit 1
@@ -30,6 +31,12 @@ preinst ()
             echo "MySQL database ${MYSQL_DATABASE} already exists"
             exit 1
         fi
+
+        # Check directory
+        if [ ! -d ${wizard_owncloud_datadirectory} ]; then
+            echo "Directory does not exist"
+            exit 1
+        fi
     fi
 
     exit 0
@@ -40,19 +47,31 @@ postinst ()
     # Link
     ln -s ${SYNOPKG_PKGDEST} ${INSTALL_DIR}
 
+    # Install busybox stuff
+    ${INSTALL_DIR}/bin/busybox --install ${INSTALL_DIR}/bin
+
     # Install the web interface
     cp -R ${INSTALL_DIR}/share/${PACKAGE} ${WEB_DIR}
     mkdir ${WEB_DIR}/${PACKAGE}/data
 
-    # Setup database and configuration file
+    # Configure open_basedir
+    echo -e "<Directory \"${WEB_DIR}/${PACKAGE}\">\nphp_admin_value open_basedir none\n</Directory>" > /usr/syno/etc/sites-enabled-user/${PACKAGE}.conf
+
+    # Setup database and autoconfig file
     if [ "${SYNOPKG_PKG_STATUS}" == "INSTALL" ]; then
-        ${MYSQL} -u root -p"${wizard_mysql_password_root}" -e "CREATE DATABASE ${MYSQL_DATABASE}; GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${wizard_mysql_password_owncloud}';"
+        ${MYSQL} -u root -p"${wizard_mysql_password_root}" -e "CREATE DATABASE ${MYSQL_DATABASE}; GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${wizard_mysql_password_owncloud:=owncloud}';"
+        sed -i -e "s/@admin_username@/${wizard_owncloud_admin_username:=admin}/g" \
+               -e "s/@admin_password@/${wizard_owncloud_admin_password:=admin}/g" \
+               -e "s/@db_password@/${wizard_mysql_password_owncloud:=owncloud}/g" \
+               -e "s#@directory@#${wizard_owncloud_datadirectory:=/volume1/owncloud}#g" \
+               ${WEB_DIR}/${PACKAGE}/config/autoconfig.php
     fi
 
     # Fix permissions
     chown ${USER} ${WEB_DIR}/${PACKAGE}/data
     chown -R ${USER} ${WEB_DIR}/${PACKAGE}/apps
     chown -R ${USER} ${WEB_DIR}/${PACKAGE}/config
+    chown -R ${USER} ${wizard_owncloud_datadirectory}
 
     exit 0
 }
@@ -65,6 +84,9 @@ preuninst ()
         exit 1
     fi
 
+    # Stop the package
+    ${SSS} stop > /dev/null
+
     exit 0
 }
 
@@ -72,6 +94,9 @@ postuninst ()
 {
     # Remove link
     rm -f ${INSTALL_DIR}
+
+    # Remove open_basedir configuration
+    rm -f /usr/syno/etc/sites-enabled-user/${PACKAGE}.conf
 
     # Remove database
     if [ "${SYNOPKG_PKG_STATUS}" == "UNINSTALL" -a "${wizard_remove_database}" == "true" ]; then
@@ -86,11 +111,13 @@ postuninst ()
 
 preupgrade ()
 {
+    # Stop the package
+    ${SSS} stop > /dev/null
+
     # Save the configuration file and data
     rm -fr ${TMP_DIR}/${PACKAGE}
     mkdir -p ${TMP_DIR}/${PACKAGE}
     mv ${WEB_DIR}/${PACKAGE}/config/config.php ${TMP_DIR}/${PACKAGE}/
-    mv ${WEB_DIR}/${PACKAGE}/data/ ${TMP_DIR}/${PACKAGE}/
 
     exit 0
 }
@@ -99,7 +126,6 @@ postupgrade ()
 {
     # Restore the configuration file and data
     mv ${TMP_DIR}/${PACKAGE}/config.php ${WEB_DIR}/${PACKAGE}/config/
-    mv ${TMP_DIR}/${PACKAGE}/data/ ${WEB_DIR}/${PACKAGE}/
     rm -fr ${TMP_DIR}/${PACKAGE}
 
     exit 0
