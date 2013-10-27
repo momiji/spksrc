@@ -1,6 +1,6 @@
 SPK_NAME = btsync
-SPK_VERS = 1.0.134
-SPK_REV = 2
+SPK_VERS = 1.1.70
+SPK_REV = 1
 SPK_ICON = src/btsync.png
 DSM_UI_DIR = app
 
@@ -8,6 +8,7 @@ DEPENDS  = cross/busybox cross/$(SPK_NAME)
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Automatically sync files via secure, distributed technology.
+DESCRIPTION_FRE = Synchronisation automatique de fichiers via une technologie sûre et distribuée. 
 ADMIN_PORT = 8888
 RELOAD_UI = yes
 DISPLAY_NAME = BitTorrent Sync
